@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interiors Company</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+        integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+    <style>
+        :root {
+            --primary: #0B5598;
+        }
+
+        * {
+            font-family: "Poppins", sans-serif;
+        }
+
+
+        .portfolio-grid img {
+            width: 100%;
+            height: 350px;
+            object-fit: cover;
+            transition: transform 0.3s ease-in-out;
+            filter: brightness(0.9);
+
+        }
+
+        .portfolio-grid img:hover {
+            transform: scale(1.3);
+            box-shadow: 0 0 170px 40px rgba(0, 0, 0, 0.35);
+        }
+
+        .portfolio-grid img:hover {
+            transform: scale(1.23);
+            filter: brightness(1.1);
+            z-index: 100000;
+            border-radius: 5px;
+            /* border: 1px solid #fff; */
+        }
+
+        @keyframes blink {
+            0% {
+                opacity: 1;
+            }
+
+            50% {
+                /* opacity: 0.7; */
+                filter: brightness(0.4);
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        .blink {
+            animation: blink 2s infinite;
+        }
+    </style>
+</head>
+
+<body class="bg-slate-500 text-gray-800">
+
+    <div class="h-full w-full overflow-y-scroll">
+        <img src="./wmremove-transformed.png" alt="" class="fixed h-screen w-screen top-0 right-0 z-[-1]">
+        <div class="min-h-screen w-full bg-cover bg-center bg-no-repeat relative flex items-center justify-center"
+            data-aos="fade-up">
+            <!-- Navbar -->
+            <nav
+                class="bg-[#ffffffbd] mt-4 fixed w-[calc(100%-30px)] top-0 z-10 rounded-lg backdrop-blur backdrop-brightness-105">
+                <div class="container mx-auto flex justify-between items-center p-4">
+                    <img src="./logo.png" class="text-xl font-bold text-[var(--primary)] max-w-[250px]">
+                    <ul class="hidden md:flex space-x-8">
+                        <li><a href="#services" class="hover:text-[var(--primary)]">Services</a></li>
+                        <li><a href="#portfolio" class="hover:text-[var(--primary)]">Portfolio</a></li>
+                        <li><a href="#contact" class="hover:text-[var(--primary)]">Contact</a></li>
+                    </ul>
+                </div>
+            </nav>
+
+            <!-- Hero Section -->
+            <section class="h-screen w-screen flex items-center justify-center text-center relative overflow-hidden"
+                id="hero">
+                <video id="hero-video" autoplay muted
+                    class="absolute inset-0 w-full h-full object-cover z-[-1]"></video>
+
+                <div class="relative z-10 text-center text-white">
+                    <h2 class="md:text-4xl text-3xl font-bold text-white drop-shadow-lg">Transforming Spaces, Elevating
+                        Lives</h2>
+                    <p class="mt-4 text-lg text-gray-300">We create beautiful interiors tailored to your lifestyle.</p>
+                </div>
+            </section>
+
+        </div>
+
+        <section id="stats" class="py-16 bg-gray-100 text-center">
+            <div class="container mx-auto ">
+                <h2 class="md:text-3xl text-2xl font-bold text-[var(--primary)] mb-16 ">Let Our Numbers Do the
+                    Talking!</h2>
+                <div class="grid grid-cols-1 md:grid-cols-4 md:gap-8 gap-6 md:text-4xl text-3xl font-bold mb-10">
+                    <div>
+                        <span class="counter" data-target="2050">0</span>+
+                        <p class="text-lg text-gray-600">Happy Customers</p>
+                    </div>
+                    <div>
+                        <span class="counter" data-target="1200">0</span>+
+                        <p class="text-lg text-gray-600">Designers</p>
+                    </div>
+                    <div>
+                        <span class="counter" data-target="340">0</span>+
+                        <p class="text-lg text-gray-600">Areas</p>
+                    </div>
+                    <div>
+                        <span class="counter" data-target="10">0</span>+
+                        <p class="text-lg text-gray-600">Years of Experience</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Us Section -->
+        <section id="about" class="py-16 bg-[#ffffff20] backdrop-blur-[10px] w-full">
+            <div class="container mx-auto flex flex-col md:flex-row gap-6 items-center max-w-6xl px-10">
+                <!-- Left: Image -->
+                <div class="md:w-1/2 w-full mb-8 md:mb-0">
+                    <img src="./logo.png" alt="About Us Image" class="w-full h-auto rounded-lg shadow-lg">
+                </div>
+                <!-- Right: Text Content -->
+                <div class="md:w-1/2 w-full md:text-left text-center">
+                    <h2 class="text-3xl font-bold text-[var(--primary)] mb-6">About Us</h2>
+                    <p class="text-gray-700 text-md leading-relaxed">
+                        At <span class="font-medium">Urban<span class="text-[var(--primary)]">Blueprint</span></span>,
+                        we
+                        believe that a well-designed space has the power to transform lives.
+                        With a passion for creativity and an eye for detail, our team of expert designers crafts
+                        elegant,
+                        functional, and personalized interiors that resonate with your vision.
+                    </p>
+                    <p class="text-gray-700 text-md leading-relaxed mt-4">
+                        With years of experience and a commitment to quality, we take pride in delivering timeless
+                        designs that blend aesthetics with functionality. Let us help you create spaces that inspire
+                        and reflect your unique style.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- Services Section -->
+        <section id="services" class="py-16 bg-gray-100 text-center">
+            <div class="container mx-auto md:w-full w-[92vw]">
+                <h2 class="text-3xl font-bold w-full text-center pl-10 text-[var(--primary)] mb-10">Our Services</h2>
+                <div class="grid md:grid-cols-3 gap-6">
+                    <div class="p-6 pt-5 bg-white rounded-xl" data-aos="fade-up">
+                        <img src="./residential.png" alt="Residential" class="rounded-lg mb-4">
+                        <h3 class="text-xl font-semibold text-left">Residential Interiors</h3>
+                        <p class="text-gray-600 mt-2 text-left">Custom home interiors that reflect your personality.</p>
+                    </div>
+                    <div class="p-6 pt-5 bg-white rounded-xl" data-aos="fade-up" data-aos-delay="100">
+                        <img src="./corporate.webp" alt="Commercial" class="rounded-lg mb-4">
+                        <h3 class="text-xl font-semibold text-left">Commercial Spaces</h3>
+                        <p class="text-gray-600 mt-2 text-left">Stylish and functional workspaces to boost productivity.
+                        </p>
+                    </div>
+                    <div class="p-6 pt-5 bg-white rounded-xl" data-aos="fade-up" data-aos-delay="200">
+                        <img src="./renovation.jpg" alt="Renovations" class="rounded-lg mb-4">
+                        <h3 class="text-xl font-semibold text-left">Renovations</h3>
+                        <p class="text-gray-600 mt-2 text-left">Revamp your space with modern designs and premium
+                            finishes.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="portfolio" class="py-16 bg-white text-center">
+            <div class="container mx-auto  md:w-full w-[92vw]">
+                <h2 class="text-3xl font-bold text-[var(--primary)] mb-10 text-left ">Gallery</h2>
+                <div class="grid grid-cols-2 md:grid-cols-3 gap-0 portfolio-grid">
+                    <img src="./portfolio-images/portfolio-1.jpg" alt="Project 1" class="shadow-md">
+                    <img src="./portfolio-images/portfolio-2.jpg" alt="Project 2" class="shadow-md">
+                    <img src="./portfolio-images/portfolio-3.jpg" alt="Project 3" class="shadow-md">
+                    <img src="./portfolio-images/portfolio-4.jpg" alt="Project 4" class="shadow-md">
+                    <img src="./portfolio-images/portfolio-5.jpg" alt="Project 5" class="shadow-md hidden md:block">
+                    <img src="./portfolio-images/portfolio-6.jpg" alt="Project 6" class="shadow-md hidden md:block">
+                </div>
+            </div>
+        </section>
+
+        <section id="portfolio" class="py-16 bg-white text-center">
+            <div class="container mx-auto md:w-full w-[92vw]">
+                <h2 class="text-3xl font-bold text-[var(--primary)] mb-10 text-left">Gallery</h2>
+
+                <div class="swiper mySwiper">
+                    <div class="swiper-wrapper">
+                        <div class="swiper-slide">
+                            <img src="./portfolio-images/portfolio-1.jpg" alt="Project 1"
+                                class="shadow-md w-full h-auto">
+                        </div>
+                        <div class="swiper-slide">
+                            <img src="./portfolio-images/portfolio-2.jpg" alt="Project 2"
+                                class="shadow-md w-full h-auto">
+                        </div>
+                        <div class="swiper-slide">
+                            <img src="./portfolio-images/portfolio-3.jpg" alt="Project 3"
+                                class="shadow-md w-full h-auto">
+                        </div>
+                        <div class="swiper-slide">
+                            <img src="./portfolio-images/portfolio-4.jpg" alt="Project 4"
+                                class="shadow-md w-full h-auto">
+                        </div>
+                        <div class="swiper-slide">
+                            <img src="./portfolio-images/portfolio-5.jpg" alt="Project 5"
+                                class="shadow-md w-full h-auto">
+                        </div>
+                        <div class="swiper-slide">
+                            <img src="./portfolio-images/portfolio-6.jpg" alt="Project 6"
+                                class="shadow-md w-full h-auto">
+                        </div>
+                        <div class="swiper-slide">
+                            <img src="./portfolio-images/portfolio-7.jpg" alt="Project 7"
+                                class="shadow-md w-full h-auto">
+                        </div>
+                        <div class="swiper-slide">
+                            <img src="./portfolio-images/portfolio-8.jpg" alt="Project 8"
+                                class="shadow-md w-full h-auto">
+                        </div>
+                        <div class="swiper-slide">
+                            <img src="./portfolio-images/portfolio-9.jpg" alt="Project 9"
+                                class="shadow-md w-full h-auto">
+                        </div>
+                        <div class="swiper-slide">
+                            <img src="./portfolio-images/portfolio-10.jpg" alt="Project 10"
+                                class="shadow-md w-full h-auto">
+                        </div>
+                        <div class="swiper-slide">
+                            <img src="./portfolio-images/portfolio-11.jpg" alt="Project 11"
+                                class="shadow-md w-full h-auto">
+                        </div>
+                        <div class="swiper-slide">
+                            <img src="./portfolio-images/portfolio-12.jpg" alt="Project 12"
+                                class="shadow-md w-full h-auto">
+                        </div>
+                        <div class="swiper-slide">
+                            <img src="./portfolio-images/portfolio-13.jpg" alt="Project 13"
+                                class="shadow-md w-full h-auto">
+                        </div>
+                        <div class="swiper-slide">
+                            <img src="./portfolio-images/portfolio-14.jpg" alt="Project 14"
+                                class="shadow-md w-full h-auto">
+                        </div>
+                        <div class="swiper-slide">
+                            <img src="./portfolio-images/portfolio-15.jpg" alt="Project 15"
+                                class="shadow-md w-full h-auto">
+                        </div>
+                        <div class="swiper-slide">
+                            <img src="./portfolio-images/portfolio-16.jpg" alt="Project 16"
+                                class="shadow-md w-full h-auto">
+                        </div>
+                        <div class="swiper-slide">
+                            <img src="./portfolio-images/portfolio-17.jpg" alt="Project 17"
+                                class="shadow-md w-full h-auto">
+                        </div>
+                        <div class="swiper-slide">
+                            <img src="./portfolio-images/portfolio-18.jpg" alt="Project 18"
+                                class="shadow-md w-full h-auto">
+                        </div>
+                        <div class="swiper-slide">
+                            <img src="./portfolio-images/portfolio-19.jpg" alt="Project 19"
+                                class="shadow-md w-full h-auto">
+                        </div>
+                        <div class="swiper-slide">
+                            <img src="./portfolio-images/portfolio-20.jpg" alt="Project 20"
+                                class="shadow-md w-full h-auto">
+                        </div>
+                        <div class="swiper-slide">
+                            <img src="./portfolio-images/portfolio-21.jpg" alt="Project 21"
+                                class="shadow-md w-full h-auto">
+                        </div>
+                        <div class="swiper-slide">
+                            <img src="./portfolio-images/portfolio-22.jpg" alt="Project 22"
+                                class="shadow-md w-full h-auto">
+                        </div>
+                        <div class="swiper-slide">
+                            <img src="./portfolio-images/portfolio-23.jpg" alt="Project 23"
+                                class="shadow-md w-full h-auto">
+                        </div>
+                        <div class="swiper-slide">
+                            <img src="./portfolio-images/portfolio-24.jpg" alt="Project 24"
+                                class="shadow-md w-full h-auto">
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+
+
+        <!-- Our Process Section -->
+        <section id="process" class="py-16 bg-gray-100 text-center ">
+            <div class="container mx-auto max-w-4xl  md:w-full w-[92vw]">
+                <h2 class="text-3xl font-bold text-[var(--primary)] mb-16 w-1/2 text-left">Our Process</h2>
+                <div class="flex flex-col space-y-8   border-[var(--primary)] ">
+                    <div class="flex items-start space-x-4 ">
+                        <i class="fas fa-comments text-[var(--primary)] text-2xl"></i>
+                        <div>
+                            <h3 class="text-xl font-bold text-left">Consultation</h3>
+                            <p class="text-gray-600">We begin with an in-depth discussion to understand your vision,
+                                style,
+                                and requirements.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start space-x-4">
+                        <i class="fas fa-pencil-ruler text-[var(--primary)] text-2xl"></i>
+                        <div>
+                            <h3 class="text-xl font-bold text-left">Design Planning</h3>
+                            <p class="text-gray-600">Our experts craft a custom design plan, incorporating your
+                                preferences
+                                and functional needs.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start space-x-4">
+                        <i class="fas fa-tools text-[var(--primary)] text-2xl"></i>
+                        <div>
+                            <h3 class="text-xl font-bold text-left">Execution</h3>
+                            <p class="text-gray-600">We bring the designs to life, ensuring precision, quality, and
+                                efficiency in every detail.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start space-x-4 text-left">
+                        <i class="fas fa-paint-brush text-[var(--primary)] text-2xl"></i>
+                        <div>
+                            <h3 class="text-xl font-bold">Final Touches</h3>
+                            <p class="text-gray-600">We refine and add the finishing elements to perfect the aesthetics
+                                and
+                                functionality of your space.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="h-[100px]"></div>
+        </section>
+
+        <div class="h-0 w-full relative">
+            <img src="image.png" alt="" class="drop-shadow-lg h-auto w-[38vw] z-10 absolute top-[-10vw] right-0">
+        </div>
+
+        <!--Testimonials section-->
+        <section id="testimonials" class="py-16 bg-white text-center overflow-hidden relative">
+            <div class="container mx-auto">
+                <h2 class="text-3xl font-bold mb-10 text-left text-[var(--primary)]">What Our Clients Say</h2>
+                <div class="relative w-full ">
+                    <div class="flex gap-6">
+
+                        <div class="testimonial p-6 bg-white shadow-lg rounded-xl border border-gray-200 w-80">
+                            <div class="flex items-center gap-3">
+                                <img src="https://avatar.iran.liara.run/username?username=Himanshu+Prasad"
+                                    class="w-10 h-10 rounded-full" alt="User" />
+                                <div class="text-left">
+                                    <h4 class="font-semibold text-gray-800">Himanshu Prasad</h4>
+                                    <p class="text-gray-500 text-sm">2025-02-10</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center mt-2">
+                                <span class="text-yellow-500 text-xl">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+                            </div>
+                            <p class="text-gray-700 italic mt-3 max-w-[90%] text-wrap text-sm">"InterioSplash has an
+                                amazing eye for detail! My living space looks stunning."</p>
+                        </div>
+
+                        <!-- Testimonial 2 -->
+                        <div class="testimonial p-6 bg-white shadow-lg rounded-xl border border-gray-200 w-80">
+                            <div class="flex items-center gap-3">
+                                <img src="https://avatar.iran.liara.run/username?username=Sai+Kothari"
+                                    class="w-10 h-10 rounded-full" alt="User" />
+                                <div class="text-left">
+                                    <h4 class="font-semibold text-gray-800">Sai Kothari</h4>
+                                    <p class="text-gray-500 text-sm">2025-03-05</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center mt-2">
+                                <span class="text-yellow-500 text-xl">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+                            </div>
+                            <p class="text-gray-700 italic mt-3 max-w-[90%] text-wrap text-sm">"Highly professional
+                                team! They delivered everything as promised and more."</p>
+                        </div>
+
+                        <!-- Testimonial 3 -->
+                        <div class="testimonial p-6 bg-white shadow-lg rounded-xl border border-gray-200 w-80">
+                            <div class="flex items-center gap-3">
+                                <img src="https://avatar.iran.liara.run/username?username=Parth+Kumar"
+                                    class="w-10 h-10 rounded-full" alt="User" />
+                                <div class="text-left">
+                                    <h4 class="font-semibold text-gray-800">Parth Kumar</h4>
+                                    <p class="text-gray-500 text-sm">2025-04-12</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center mt-2">
+                                <span class="text-yellow-500 text-xl">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+                            </div>
+                            <p class="text-gray-700 italic mt-3 max-w-[90%] text-wrap text-sm">"Their designs completely
+                                transformed my office! The best in the business."</p>
+                        </div>
+
+                        <!-- Testimonial 4 -->
+                        <div class="testimonial p-6 bg-white shadow-lg rounded-xl border border-gray-200 w-80">
+                            <div class="flex items-center gap-3">
+                                <img src="https://avatar.iran.liara.run/username?username=Suman+Sahu"
+                                    class="w-10 h-10 rounded-full" alt="User" />
+                                <div class="text-left">
+                                    <h4 class="font-semibold text-gray-800">Suman Sahu</h4>
+                                    <p class="text-gray-500 text-sm">2025-05-20</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center mt-2">
+                                <span class="text-yellow-500 text-xl">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+                            </div>
+                            <p class="text-gray-700 italic mt-3 max-w-[90%] text-wrap text-sm">"Absolutely impressed!
+                                They made my dream home a reality."</p>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <style>
+            @keyframes scroll {
+                0% {
+                    transform: translateX(0);
+                }
+
+                100% {
+                    transform: translateX(-50%);
+                }
+
+                /* Adjust based on content width */
+            }
+
+            .animate-scroll {
+                display: flex;
+                white-space: nowrap;
+                animation: scroll 15s linear infinite;
+            }
+        </style>
+
+
+
+
+        <section id="why-us" class="py-16 bg-gray-100 text-center">
+            <div class="container mx-auto">
+                <h2 class="text-3xl font-bold text-[var(--primary)] mb-6">Why Choose Us?</h2>
+                <div class="grid md:grid-cols-3 gap-6">
+                    <div class="p-6 bg-white shadow-md rounded-xl" data-aos="fade-up">
+                        <h3 class="text-xl font-semibold">Experienced Team</h3>
+                        <p class="text-gray-600 mt-2">Our experts have years of experience in interior design.</p>
+                    </div>
+                    <div class="p-6 bg-white shadow-md rounded-xl" data-aos="fade-up" data-aos-delay="100">
+                        <h3 class="text-xl font-semibold">Personalized Approach</h3>
+                        <p class="text-gray-600 mt-2">We tailor every project to match your unique style and needs.</p>
+                    </div>
+                    <div class="p-6 bg-white shadow-md rounded-xl" data-aos="fade-up" data-aos-delay="200">
+                        <h3 class="text-xl font-semibold">Quality & Durability</h3>
+                        <p class="text-gray-600 mt-2">We use high-quality materials to ensure long-lasting beauty.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+
+        <!-- Contact Section -->
+        <section id="contact" class="py-16 bg-white text-center">
+            <div class="container mx-auto">
+                <h2 class="text-3xl font-bold text-[var(--primary)] mb-6">Contact Us</h2>
+                <p class="text-gray-600">Let's bring your vision to life. Reach out to us today.</p>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="bg-white shadow-md py-4 text-center">
+            <p class="text-gray-600">&copy; 2025 Interiors Company. All rights reserved.</p>
+        </footer>
+
+    </div>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        const swiper = new Swiper('.mySwiper', {
+            slidesPerView: 4,
+            spaceBetween: 10,
+            breakpoints: {
+                768: {
+                    slidesPerView: 6,
+                },
+            },
+            loop: true,
+            autoplay: {
+                delay: 2500,
+                disableOnInteraction: false,
+            },
+        });
+    </script>
+
+    <script>
+        const videoSources = [
+            "./hero-vid/v4.mp4",
+            "./hero-vid/v6.mp4",
+            "./hero-vid/v2.mp4",
+            "./hero-vid/v3.mp4",
+            "./hero-vid/v5.mp4",
+            "./hero-vid/v1.mp4",
+        ];
+
+        let currentVideoIndex = 0;
+        const videoElement = document.getElementById("hero-video");
+
+        function playNextVideo() {
+            videoElement.src = videoSources[currentVideoIndex];
+            videoElement.play();
+            currentVideoIndex = (currentVideoIndex + 1) % videoSources.length; // Loop back after v5
+        }
+
+        videoElement.addEventListener("ended", playNextVideo);
+
+        // Start playing the first video
+        playNextVideo();
+    </script>
+    <script src="./index.js"></script>
+</body>
+
+</html>
