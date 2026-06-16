@@ -21,12 +21,170 @@
     <style>
         :root {
             --primary: #0B5598;
+            --primary-light: #1d76c9;
+            --accent: #c89b3c;
+            --ink: #0f172a;
         }
 
         * {
             font-family: "Poppins", sans-serif;
         }
 
+        html {
+            scroll-behavior: smooth;
+        }
+
+        ::selection {
+            background: var(--primary);
+            color: #fff;
+        }
+
+        /* Gradient text helper */
+        .gradient-text {
+            background: linear-gradient(120deg, var(--primary), var(--primary-light) 45%, var(--accent));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Animated gradient blobs */
+        .blob {
+            position: absolute;
+            border-radius: 9999px;
+            filter: blur(70px);
+            opacity: 0.45;
+            z-index: 0;
+            pointer-events: none;
+            animation: float 12s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(20px, -30px) scale(1.1); }
+        }
+
+        /* Reveal-on-scroll */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.8s cubic-bezier(.16,1,.3,1), transform 0.8s cubic-bezier(.16,1,.3,1);
+        }
+        .reveal.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Section heading underline accent */
+        .heading-accent {
+            position: relative;
+            display: inline-block;
+        }
+        .heading-accent::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            bottom: -10px;
+            height: 4px;
+            width: 60px;
+            border-radius: 99px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+        }
+
+        /* Card lift hover */
+        .lift {
+            transition: transform 0.4s cubic-bezier(.16,1,.3,1), box-shadow 0.4s ease;
+        }
+        .lift:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 25px 50px -12px rgba(11, 85, 152, 0.25);
+        }
+
+        /* ===== Price Calculator ===== */
+        .calc-shell {
+            background: rgba(255, 255, 255, 0.65);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 30px 60px -15px rgba(11, 85, 152, 0.25);
+        }
+
+        .opt-card {
+            cursor: pointer;
+            border: 2px solid transparent;
+            background: #fff;
+            transition: all 0.3s cubic-bezier(.16,1,.3,1);
+        }
+        .opt-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(11, 85, 152, 0.35);
+        }
+        .opt-card.selected {
+            border-color: var(--primary);
+            background: linear-gradient(180deg, rgba(11,85,152,0.06), rgba(255,255,255,0.9));
+            box-shadow: 0 10px 25px -8px rgba(11, 85, 152, 0.4);
+        }
+        .opt-card.selected .opt-check {
+            opacity: 1;
+            transform: scale(1);
+        }
+        .opt-check {
+            opacity: 0;
+            transform: scale(0.4);
+            transition: all 0.25s ease;
+        }
+
+        .addon-chip {
+            cursor: pointer;
+            border: 1.5px solid #e2e8f0;
+            transition: all 0.25s ease;
+            user-select: none;
+        }
+        .addon-chip:hover { border-color: var(--primary-light); }
+        .addon-chip.selected {
+            border-color: var(--primary);
+            background: var(--primary);
+            color: #fff;
+            box-shadow: 0 8px 20px -6px rgba(11, 85, 152, 0.5);
+        }
+
+        /* Custom range slider */
+        input[type="range"].calc-range {
+            -webkit-appearance: none;
+            appearance: none;
+            height: 8px;
+            border-radius: 99px;
+            background: #e2e8f0;
+            outline: none;
+        }
+        input[type="range"].calc-range::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--primary);
+            border: 4px solid #fff;
+            box-shadow: 0 4px 12px rgba(11, 85, 152, 0.5);
+            cursor: pointer;
+            transition: transform 0.15s ease;
+        }
+        input[type="range"].calc-range::-webkit-slider-thumb:hover { transform: scale(1.15); }
+        input[type="range"].calc-range::-moz-range-thumb {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--primary);
+            border: 4px solid #fff;
+            box-shadow: 0 4px 12px rgba(11, 85, 152, 0.5);
+            cursor: pointer;
+        }
+
+        @keyframes pricepop {
+            0% { transform: scale(1); }
+            40% { transform: scale(1.08); }
+            100% { transform: scale(1); }
+        }
+        .price-pop { animation: pricepop 0.4s ease; }
 
         .portfolio-grid img {
             width: 100%;
@@ -82,10 +240,17 @@
                 class="bg-[#ffffffbd] mt-4 fixed w-[calc(100%-30px)] top-0 z-10 rounded-lg backdrop-blur backdrop-brightness-105">
                 <div class="container mx-auto flex justify-between items-center p-4">
                     <img src="./logo.png" class="text-xl font-bold text-[var(--primary)] max-w-[250px]">
-                    <ul class="hidden md:flex space-x-8">
-                        <li><a href="#services" class="hover:text-[var(--primary)]">Services</a></li>
-                        <li><a href="#portfolio" class="hover:text-[var(--primary)]">Portfolio</a></li>
-                        <li><a href="#contact" class="hover:text-[var(--primary)]">Contact</a></li>
+                    <ul class="hidden md:flex space-x-8 items-center">
+                        <li><a href="#services" class="hover:text-[var(--primary)] transition-colors">Services</a></li>
+                        <li><a href="#portfolio" class="hover:text-[var(--primary)] transition-colors">Portfolio</a></li>
+                        <li><a href="#calculator" class="hover:text-[var(--primary)] transition-colors">Pricing</a></li>
+                        <li><a href="#contact" class="hover:text-[var(--primary)] transition-colors">Contact</a></li>
+                        <li>
+                            <a href="#calculator"
+                                class="bg-[var(--primary)] text-white px-5 py-2.5 rounded-full font-medium shadow-lg shadow-blue-900/20 hover:scale-105 transition-transform inline-block">
+                                <i class="fas fa-calculator mr-1.5"></i>Get Estimate
+                            </a>
+                        </li>
                     </ul>
                 </div>
             </nav>
@@ -95,12 +260,34 @@
                 id="hero">
                 <video id="hero-video" autoplay muted
                     class="absolute inset-0 w-full h-full object-cover z-[-1]"></video>
+                <div class="absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-black/70 z-0"></div>
 
-                <div class="relative z-10 text-center text-white">
-                    <h2 class="md:text-4xl text-3xl font-bold text-white drop-shadow-lg">Transforming Spaces, Elevating
-                        Lives</h2>
-                    <p class="mt-4 text-lg text-gray-300">We create beautiful interiors tailored to your lifestyle.</p>
+                <div class="relative z-10 text-center text-white px-6 max-w-3xl" data-aos="zoom-in">
+                    <span
+                        class="inline-block mb-5 px-4 py-1.5 rounded-full text-sm font-medium bg-white/15 backdrop-blur border border-white/25">
+                        <i class="fas fa-star text-[var(--accent)] mr-1"></i> Award-winning interior design studio
+                    </span>
+                    <h2 class="md:text-6xl text-4xl font-extrabold text-white drop-shadow-xl leading-tight">
+                        Transforming Spaces,<br><span class="text-[var(--accent)]">Elevating Lives</span>
+                    </h2>
+                    <p class="mt-5 text-lg md:text-xl text-gray-200 max-w-xl mx-auto">We craft beautiful, functional
+                        interiors tailored to your lifestyle and budget.</p>
+                    <div class="mt-8 flex flex-wrap gap-4 justify-center">
+                        <a href="#calculator"
+                            class="bg-[var(--primary)] hover:bg-[var(--primary-light)] text-white px-8 py-3.5 rounded-full font-semibold shadow-xl shadow-blue-900/30 hover:scale-105 transition-all">
+                            <i class="fas fa-calculator mr-2"></i>Calculate Your Price
+                        </a>
+                        <a href="#portfolio"
+                            class="bg-white/10 backdrop-blur border border-white/40 text-white px-8 py-3.5 rounded-full font-semibold hover:bg-white/20 hover:scale-105 transition-all">
+                            View Our Work
+                        </a>
+                    </div>
                 </div>
+
+                <a href="#stats"
+                    class="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 text-white/80 animate-bounce">
+                    <i class="fas fa-chevron-down text-2xl"></i>
+                </a>
             </section>
 
         </div>
@@ -161,20 +348,20 @@
         <!-- Services Section -->
         <section id="services" class="py-16 bg-gray-100 text-center">
             <div class="container mx-auto md:w-full w-[92vw]">
-                <h2 class="text-3xl font-bold w-full text-center pl-10 text-[var(--primary)] mb-10">Our Services</h2>
+                <h2 class="text-3xl md:text-4xl font-bold w-full text-center text-[var(--primary)] mb-12">Our <span class="gradient-text">Services</span></h2>
                 <div class="grid md:grid-cols-3 gap-6">
-                    <div class="p-6 pt-5 bg-white rounded-xl" data-aos="fade-up">
+                    <div class="p-6 pt-5 bg-white rounded-xl lift" data-aos="fade-up">
                         <img src="./residential.png" alt="Residential" class="rounded-lg mb-4">
                         <h3 class="text-xl font-semibold text-left">Residential Interiors</h3>
                         <p class="text-gray-600 mt-2 text-left">Custom home interiors that reflect your personality.</p>
                     </div>
-                    <div class="p-6 pt-5 bg-white rounded-xl" data-aos="fade-up" data-aos-delay="100">
+                    <div class="p-6 pt-5 bg-white rounded-xl lift" data-aos="fade-up" data-aos-delay="100">
                         <img src="./corporate.webp" alt="Commercial" class="rounded-lg mb-4">
                         <h3 class="text-xl font-semibold text-left">Commercial Spaces</h3>
                         <p class="text-gray-600 mt-2 text-left">Stylish and functional workspaces to boost productivity.
                         </p>
                     </div>
-                    <div class="p-6 pt-5 bg-white rounded-xl" data-aos="fade-up" data-aos-delay="200">
+                    <div class="p-6 pt-5 bg-white rounded-xl lift" data-aos="fade-up" data-aos-delay="200">
                         <img src="./renovation.jpg" alt="Renovations" class="rounded-lg mb-4">
                         <h3 class="text-xl font-semibold text-left">Renovations</h3>
                         <p class="text-gray-600 mt-2 text-left">Revamp your space with modern designs and premium
@@ -185,7 +372,7 @@
             </div>
         </section>
 
-        <section id="portfolio" class="py-16 bg-white text-center">
+        <section id="portfolio" class="py-16 bg-white text-center hidden md:block">
             <div class="container mx-auto  md:w-full w-[92vw]">
                 <h2 class="text-3xl font-bold text-[var(--primary)] mb-10 text-left ">Gallery</h2>
                 <div class="grid grid-cols-2 md:grid-cols-3 gap-0 portfolio-grid">
@@ -199,7 +386,7 @@
             </div>
         </section>
 
-        <section id="portfolio" class="py-16 bg-white text-center">
+        <section id="portfolio-slider" class="py-16 bg-white text-center md:hidden">
             <div class="container mx-auto md:w-full w-[92vw]">
                 <h2 class="text-3xl font-bold text-[var(--primary)] mb-10 text-left">Gallery</h2>
 
@@ -464,17 +651,17 @@
 
         <section id="why-us" class="py-16 bg-gray-100 text-center">
             <div class="container mx-auto">
-                <h2 class="text-3xl font-bold text-[var(--primary)] mb-6">Why Choose Us?</h2>
+                <h2 class="text-3xl md:text-4xl font-bold text-[var(--primary)] mb-10">Why <span class="gradient-text">Choose Us?</span></h2>
                 <div class="grid md:grid-cols-3 gap-6">
-                    <div class="p-6 bg-white shadow-md rounded-xl" data-aos="fade-up">
+                    <div class="p-6 bg-white shadow-md rounded-xl lift" data-aos="fade-up">
                         <h3 class="text-xl font-semibold">Experienced Team</h3>
                         <p class="text-gray-600 mt-2">Our experts have years of experience in interior design.</p>
                     </div>
-                    <div class="p-6 bg-white shadow-md rounded-xl" data-aos="fade-up" data-aos-delay="100">
+                    <div class="p-6 bg-white shadow-md rounded-xl lift" data-aos="fade-up" data-aos-delay="100">
                         <h3 class="text-xl font-semibold">Personalized Approach</h3>
                         <p class="text-gray-600 mt-2">We tailor every project to match your unique style and needs.</p>
                     </div>
-                    <div class="p-6 bg-white shadow-md rounded-xl" data-aos="fade-up" data-aos-delay="200">
+                    <div class="p-6 bg-white shadow-md rounded-xl lift" data-aos="fade-up" data-aos-delay="200">
                         <h3 class="text-xl font-semibold">Quality & Durability</h3>
                         <p class="text-gray-600 mt-2">We use high-quality materials to ensure long-lasting beauty.</p>
                     </div>
@@ -484,20 +671,284 @@
 
 
 
+        <!-- Price Calculator Section -->
+        <section id="calculator" class="relative py-20 overflow-hidden bg-gradient-to-br from-slate-50 to-blue-50">
+            <!-- decorative animated blobs -->
+            <div class="blob w-72 h-72 bg-[var(--primary)] -top-10 -left-10"></div>
+            <div class="blob w-80 h-80 bg-[var(--accent)] bottom-0 right-0" style="animation-delay:-6s"></div>
+
+            <div class="container mx-auto px-5 md:px-10 relative z-10 max-w-6xl">
+                <div class="text-center mb-12 reveal">
+                    <span class="text-sm font-semibold tracking-widest uppercase text-[var(--accent)]">Instant
+                        Estimate</span>
+                    <h2 class="text-3xl md:text-5xl font-extrabold mt-2 gradient-text">Interior Price Calculator</h2>
+                    <p class="text-gray-600 mt-4 max-w-xl mx-auto">Customize your project below and watch your estimate
+                        update live. No sign-up needed.</p>
+                </div>
+
+                <div class="calc-shell rounded-3xl p-6 md:p-10 grid lg:grid-cols-3 gap-8 reveal">
+                    <!-- Inputs -->
+                    <div class="lg:col-span-2 space-y-8">
+                        <!-- Property type -->
+                        <div>
+                            <label class="block font-semibold text-[var(--ink)] mb-3">
+                                <i class="fas fa-building text-[var(--primary)] mr-2"></i>Property Type
+                            </label>
+                            <div class="grid grid-cols-3 gap-3" id="propertyTypes">
+                                <div class="opt-card selected rounded-2xl p-4 text-center relative" data-type="apartment" data-mult="1">
+                                    <i class="fas fa-check-circle opt-check absolute top-2 right-2 text-[var(--primary)]"></i>
+                                    <i class="fas fa-city text-2xl text-[var(--primary)]"></i>
+                                    <p class="mt-2 font-medium text-sm">Apartment</p>
+                                </div>
+                                <div class="opt-card rounded-2xl p-4 text-center relative" data-type="villa" data-mult="1.18">
+                                    <i class="fas fa-check-circle opt-check absolute top-2 right-2 text-[var(--primary)]"></i>
+                                    <i class="fas fa-house-chimney text-2xl text-[var(--primary)]"></i>
+                                    <p class="mt-2 font-medium text-sm">Villa</p>
+                                </div>
+                                <div class="opt-card rounded-2xl p-4 text-center relative" data-type="office" data-mult="1.1">
+                                    <i class="fas fa-check-circle opt-check absolute top-2 right-2 text-[var(--primary)]"></i>
+                                    <i class="fas fa-briefcase text-2xl text-[var(--primary)]"></i>
+                                    <p class="mt-2 font-medium text-sm">Office</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Area slider -->
+                        <div>
+                            <div class="flex justify-between items-end mb-3">
+                                <label class="font-semibold text-[var(--ink)]">
+                                    <i class="fas fa-ruler-combined text-[var(--primary)] mr-2"></i>Carpet Area
+                                </label>
+                                <span class="text-[var(--primary)] font-bold text-lg"><span id="areaValue">1000</span>
+                                    sq.ft</span>
+                            </div>
+                            <input type="range" min="300" max="5000" step="50" value="1000" id="areaRange"
+                                class="calc-range w-full">
+                            <div class="flex justify-between text-xs text-gray-400 mt-1">
+                                <span>300</span><span>5000 sq.ft</span>
+                            </div>
+                        </div>
+
+                        <!-- Package -->
+                        <div>
+                            <label class="block font-semibold text-[var(--ink)] mb-3">
+                                <i class="fas fa-gem text-[var(--primary)] mr-2"></i>Design Package
+                            </label>
+                            <div class="grid sm:grid-cols-3 gap-3" id="packages">
+                                <div class="opt-card selected rounded-2xl p-4 relative" data-rate="1200">
+                                    <i class="fas fa-check-circle opt-check absolute top-3 right-3 text-[var(--primary)]"></i>
+                                    <p class="font-semibold">Essential</p>
+                                    <p class="text-xs text-gray-500 mt-1">Smart, budget-friendly designs</p>
+                                    <p class="mt-2 text-[var(--primary)] font-bold">₹1,200<span class="text-xs font-normal text-gray-400">/sq.ft</span></p>
+                                </div>
+                                <div class="opt-card rounded-2xl p-4 relative" data-rate="1800">
+                                    <i class="fas fa-check-circle opt-check absolute top-3 right-3 text-[var(--primary)]"></i>
+                                    <p class="font-semibold">Premium</p>
+                                    <p class="text-xs text-gray-500 mt-1">Curated finishes &amp; materials</p>
+                                    <p class="mt-2 text-[var(--primary)] font-bold">₹1,800<span class="text-xs font-normal text-gray-400">/sq.ft</span></p>
+                                </div>
+                                <div class="opt-card rounded-2xl p-4 relative" data-rate="2800">
+                                    <i class="fas fa-check-circle opt-check absolute top-3 right-3 text-[var(--primary)]"></i>
+                                    <p class="font-semibold">Luxury</p>
+                                    <p class="text-xs text-gray-500 mt-1">Bespoke, high-end interiors</p>
+                                    <p class="mt-2 text-[var(--primary)] font-bold">₹2,800<span class="text-xs font-normal text-gray-400">/sq.ft</span></p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Add-ons -->
+                        <div>
+                            <label class="block font-semibold text-[var(--ink)] mb-3">
+                                <i class="fas fa-plus-circle text-[var(--primary)] mr-2"></i>Add-ons
+                            </label>
+                            <div class="flex flex-wrap gap-2.5" id="addons">
+                                <span class="addon-chip rounded-full px-4 py-2 text-sm" data-cost="90000">Modular Kitchen</span>
+                                <span class="addon-chip rounded-full px-4 py-2 text-sm" data-cost="60000">Wardrobes</span>
+                                <span class="addon-chip rounded-full px-4 py-2 text-sm" data-cost="45000">False Ceiling</span>
+                                <span class="addon-chip rounded-full px-4 py-2 text-sm" data-cost="35000">Lighting</span>
+                                <span class="addon-chip rounded-full px-4 py-2 text-sm" data-cost="30000">Painting</span>
+                                <span class="addon-chip rounded-full px-4 py-2 text-sm" data-cost="50000">Smart Home</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Estimate summary -->
+                    <div class="lg:col-span-1">
+                        <div class="bg-gradient-to-br from-[var(--primary)] to-[#073e72] text-white rounded-3xl p-7 sticky top-24 shadow-2xl">
+                            <p class="text-blue-100 text-sm uppercase tracking-wider">Estimated Total</p>
+                            <h3 class="text-4xl font-extrabold mt-1" id="totalPrice">₹0</h3>
+                            <p class="text-blue-200 text-sm mt-1">Range: <span id="priceRange">₹0 – ₹0</span></p>
+
+                            <div class="h-px bg-white/20 my-5"></div>
+
+                            <div class="space-y-3 text-sm">
+                                <div class="flex justify-between"><span class="text-blue-100">Base design</span><span id="sumBase" class="font-medium">₹0</span></div>
+                                <div class="flex justify-between"><span class="text-blue-100">Property factor</span><span id="sumMult" class="font-medium">×1.0</span></div>
+                                <div class="flex justify-between"><span class="text-blue-100">Add-ons</span><span id="sumAddons" class="font-medium">₹0</span></div>
+                            </div>
+
+                            <a href="#contact"
+                                class="mt-7 block text-center bg-white text-[var(--primary)] font-semibold py-3.5 rounded-full hover:bg-[var(--accent)] hover:text-white transition-colors">
+                                Book Free Consultation
+                            </a>
+                            <p class="text-[11px] text-blue-200 mt-3 text-center leading-relaxed">*Indicative estimate.
+                                Final quote depends on site conditions &amp; material selection.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <!-- Contact Section -->
-        <section id="contact" class="py-16 bg-white text-center">
-            <div class="container mx-auto">
-                <h2 class="text-3xl font-bold text-[var(--primary)] mb-6">Contact Us</h2>
-                <p class="text-gray-600">Let's bring your vision to life. Reach out to us today.</p>
+        <section id="contact" class="relative py-20 overflow-hidden bg-[var(--ink)]">
+            <!-- background image + overlay -->
+            <img src="./portfolio-images/portfolio-20.jpg" alt=""
+                class="absolute inset-0 w-full h-full object-cover opacity-25">
+            <div class="absolute inset-0 bg-gradient-to-br from-[var(--ink)]/90 via-[var(--ink)]/80 to-[var(--primary)]/70"></div>
+            <div class="blob w-72 h-72 bg-[var(--primary)] top-0 right-0" style="animation-delay:-3s"></div>
+
+            <div class="container mx-auto px-5 md:px-10 relative z-10 max-w-6xl">
+                <div class="text-center mb-12 reveal">
+                    <span class="text-sm font-semibold tracking-widest uppercase text-[var(--accent)]">Get In Touch</span>
+                    <h2 class="text-3xl md:text-5xl font-extrabold mt-2 text-white">Let's Bring Your <span
+                            class="text-[var(--accent)]">Vision</span> To Life</h2>
+                    <p class="text-gray-300 mt-4 max-w-xl mx-auto">Reach out today for a free consultation. Our designers
+                        are ready to transform your space.</p>
+                </div>
+
+                <div class="grid lg:grid-cols-2 gap-8 reveal">
+                    <!-- Left: contact info + image collage -->
+                    <div class="space-y-6">
+                        <!-- Phone highlight card -->
+                        <a href="tel:+919036544997"
+                            class="group flex items-center gap-5 bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl p-6 hover:bg-white/20 transition-all">
+                            <div class="flex-shrink-0 w-14 h-14 rounded-2xl bg-[var(--accent)] flex items-center justify-center text-white text-2xl group-hover:scale-110 transition-transform">
+                                <i class="fas fa-phone-volume"></i>
+                            </div>
+                            <div class="text-left">
+                                <p class="text-gray-300 text-sm">Call us directly</p>
+                                <p class="text-white text-2xl font-bold tracking-wide">+91 90365 44997</p>
+                            </div>
+                        </a>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <a href="https://wa.me/919036544997" target="_blank" rel="noopener"
+                                class="flex items-center gap-3 bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl p-4 hover:bg-white/20 transition-all">
+                                <i class="fab fa-whatsapp text-green-400 text-2xl"></i>
+                                <div class="text-left">
+                                    <p class="text-gray-300 text-xs">WhatsApp</p>
+                                    <p class="text-white font-semibold text-sm">Chat with us</p>
+                                </div>
+                            </a>
+                            <div class="flex items-center gap-3 bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl p-4">
+                                <i class="fas fa-location-dot text-[var(--accent)] text-2xl"></i>
+                                <div class="text-left">
+                                    <p class="text-gray-300 text-xs">Studio</p>
+                                    <p class="text-white font-semibold text-sm">Bengaluru, India</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Image collage -->
+                        <div class="grid grid-cols-3 gap-3">
+                            <img src="./portfolio-images/portfolio-3.jpg" alt="Interior"
+                                class="h-28 w-full object-cover rounded-xl shadow-lg hover:scale-105 transition-transform">
+                            <img src="./portfolio-images/portfolio-8.jpg" alt="Interior"
+                                class="h-28 w-full object-cover rounded-xl shadow-lg hover:scale-105 transition-transform">
+                            <img src="./portfolio-images/portfolio-14.jpg" alt="Interior"
+                                class="h-28 w-full object-cover rounded-xl shadow-lg hover:scale-105 transition-transform">
+                        </div>
+
+                        <!-- Social -->
+                        <div class="flex items-center gap-4 pt-2">
+                            <span class="text-gray-300 text-sm">Follow us</span>
+                            <a href="#" class="w-10 h-10 rounded-full bg-white/10 border border-white/20 flex items-center justify-center text-white hover:bg-[var(--accent)] transition-colors"><i class="fab fa-instagram"></i></a>
+                            <a href="#" class="w-10 h-10 rounded-full bg-white/10 border border-white/20 flex items-center justify-center text-white hover:bg-[var(--accent)] transition-colors"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="w-10 h-10 rounded-full bg-white/10 border border-white/20 flex items-center justify-center text-white hover:bg-[var(--accent)] transition-colors"><i class="fab fa-pinterest-p"></i></a>
+                        </div>
+                    </div>
+
+                    <!-- Right: contact form -->
+                    <div class="bg-white rounded-3xl p-7 md:p-9 shadow-2xl">
+                        <h3 class="text-xl font-bold text-[var(--ink)] mb-5">Request a Free Consultation</h3>
+                        <form id="contactForm" class="space-y-4 text-left">
+                            <div>
+                                <label class="text-sm font-medium text-gray-600">Full Name</label>
+                                <input type="text" required placeholder="John Doe"
+                                    class="mt-1 w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[var(--primary)] focus:ring-2 focus:ring-[var(--primary)]/20 outline-none transition">
+                            </div>
+                            <div class="grid sm:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="text-sm font-medium text-gray-600">Phone</label>
+                                    <input type="tel" required placeholder="90365 44997"
+                                        class="mt-1 w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[var(--primary)] focus:ring-2 focus:ring-[var(--primary)]/20 outline-none transition">
+                                </div>
+                                <div>
+                                    <label class="text-sm font-medium text-gray-600">Email</label>
+                                    <input type="email" placeholder="you@email.com"
+                                        class="mt-1 w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[var(--primary)] focus:ring-2 focus:ring-[var(--primary)]/20 outline-none transition">
+                                </div>
+                            </div>
+                            <div>
+                                <label class="text-sm font-medium text-gray-600">Tell us about your space</label>
+                                <textarea rows="3" placeholder="e.g. 3BHK apartment, modern style..."
+                                    class="mt-1 w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[var(--primary)] focus:ring-2 focus:ring-[var(--primary)]/20 outline-none transition resize-none"></textarea>
+                            </div>
+                            <button type="submit"
+                                class="w-full bg-[var(--primary)] hover:bg-[var(--primary-light)] text-white font-semibold py-3.5 rounded-full shadow-lg shadow-blue-900/20 hover:scale-[1.02] transition-all">
+                                <i class="fas fa-paper-plane mr-2"></i>Send Message
+                            </button>
+                            <p id="contactSuccess" class="hidden text-green-600 text-sm text-center font-medium">
+                                <i class="fas fa-circle-check mr-1"></i>Thanks! We'll call you on +91 90365 44997 shortly.
+                            </p>
+                        </form>
+                    </div>
+                </div>
             </div>
         </section>
 
         <!-- Footer -->
-        <footer class="bg-white shadow-md py-4 text-center">
-            <p class="text-gray-600">&copy; 2025 Interiors Company. All rights reserved.</p>
+        <footer class="bg-[var(--ink)] text-gray-300 pt-12 pb-6">
+            <div class="container mx-auto px-6 max-w-6xl grid md:grid-cols-3 gap-8 text-center md:text-left">
+                <div>
+                    <h4 class="text-white text-lg font-bold mb-3">Urban<span class="text-[var(--accent)]">Blueprint</span></h4>
+                    <p class="text-sm text-gray-400">Transforming spaces, elevating lives. Beautiful interiors tailored
+                        to your lifestyle.</p>
+                </div>
+                <div>
+                    <h4 class="text-white font-semibold mb-3">Contact</h4>
+                    <a href="tel:+919036544997" class="block text-sm hover:text-[var(--accent)] transition-colors mb-1">
+                        <i class="fas fa-phone mr-2 text-[var(--accent)]"></i>+91 90365 44997</a>
+                    <a href="https://wa.me/919036544997" target="_blank" rel="noopener"
+                        class="block text-sm hover:text-[var(--accent)] transition-colors mb-1">
+                        <i class="fab fa-whatsapp mr-2 text-green-400"></i>WhatsApp Us</a>
+                    <p class="text-sm"><i class="fas fa-location-dot mr-2 text-[var(--accent)]"></i>Bengaluru, India</p>
+                </div>
+                <div>
+                    <h4 class="text-white font-semibold mb-3">Follow</h4>
+                    <div class="flex gap-3 justify-center md:justify-start">
+                        <a href="#" class="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center hover:bg-[var(--accent)] hover:text-white transition-colors"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center hover:bg-[var(--accent)] hover:text-white transition-colors"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center hover:bg-[var(--accent)] hover:text-white transition-colors"><i class="fab fa-pinterest-p"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-white/10 mt-8 pt-5 text-center text-sm text-gray-500">
+                &copy; <span id="copyrightYear"></span> UrbanBlueprint Interiors. All rights reserved.
+            </div>
         </footer>
 
     </div>
+
+    <!-- Floating WhatsApp / Call buttons -->
+    <a href="https://wa.me/919036544997" target="_blank" rel="noopener" aria-label="WhatsApp"
+        class="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full bg-green-500 text-white flex items-center justify-center text-2xl shadow-xl shadow-green-900/30 hover:scale-110 transition-transform">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+    <a href="tel:+919036544997" aria-label="Call"
+        class="fixed bottom-24 right-6 z-50 w-14 h-14 rounded-full bg-[var(--primary)] text-white flex items-center justify-center text-xl shadow-xl shadow-blue-900/30 hover:scale-110 transition-transform">
+        <i class="fas fa-phone"></i>
+    </a>
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
         const swiper = new Swiper('.mySwiper', {
@@ -539,6 +990,9 @@
 
         // Start playing the first video
         playNextVideo();
+    </script>
+    <script>
+        document.getElementById('copyrightYear').textContent = new Date().getFullYear();
     </script>
     <script src="./index.js"></script>
 </body>
